@@ -274,6 +274,7 @@ import com.questhelper.helpers.skills.woodcutting.Woodcutting;
 import com.questhelper.helpers.skills.woodcutting.WoodcuttingMember;
 import com.questhelper.playerquests.bikeshedder.BikeShedder;
 import com.questhelper.playerquests.cookshelper.CooksHelper;
+import com.questhelper.playerquests.bruhsailer.BruhsailerGuide;
 import com.questhelper.questhelpers.QuestDetails;
 import com.questhelper.questhelpers.QuestHelper;
 import lombok.Getter;
@@ -498,7 +499,7 @@ public enum QuestHelperQuest
 	KNIGHT_WAVES_TRAINING_GROUNDS(new KnightWaves(), "Knight Waves Training Grounds", QuestVarbits.KNIGHT_WAVES_TRAINING_GROUNDS, 8,
 		QuestDetails.Type.MINIQUEST, QuestDetails.Difficulty.MINIQUEST),
 	BALLOON_TRANSPORT_CRAFTING_GUILD(new CraftingGuildBalloonFlight(), "Balloon Transport - Crafting Guild", QuestVarbits.BALLOON_TRANSPORT_CRAFTING_GUILD, 1, QuestDetails.Type.MINIQUEST,
-		 QuestDetails.Difficulty.MINIQUEST),
+		QuestDetails.Difficulty.MINIQUEST),
 	BALLOON_TRANSPORT_VARROCK(new VarrockBalloonFlight(), "Balloon Transport - Varrock", QuestVarbits.BALLOON_TRANSPORT_VARROCK, 1, QuestDetails.Type.MINIQUEST,
 		QuestDetails.Difficulty.MINIQUEST),
 	BALLOON_TRANSPORT_CASTLE_WARS(new CastleWarsBalloonFlight(), "Balloon Transport - Castle Wars", QuestVarbits.BALLOON_TRANSPORT_CASTLE_WARS, 1, QuestDetails.Type.MINIQUEST,
@@ -653,7 +654,8 @@ public enum QuestHelperQuest
 
 	// Player Quests
 	COOKS_HELPER(new CooksHelper(), "Cook's Helper", PlayerQuests.COOKS_HELPER, 4, false),
-	BIKE_SHEDDER(new BikeShedder(), "Bike Shedder", PlayerQuests.BIKE_SHEDDER, 4, true);
+	BIKE_SHEDDER(new BikeShedder(), "Bike Shedder", PlayerQuests.BIKE_SHEDDER, 4, true),
+	BRUHSAILER_GUIDE(new BruhsailerGuide(), "BRUHsailer Guide", PlayerQuests.BRUHSAILER_GUIDE, 9999, false);
 
 	@Getter
 	private final int id;

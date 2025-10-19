@@ -30,7 +30,8 @@ public enum PlayerQuests
 {
 
 	COOKS_HELPER("cooks_helper"),
-	BIKE_SHEDDER("bike_shedder");
+	BIKE_SHEDDER("bike_shedder"),
+	BRUHSAILER_GUIDE("bruhsailer_guide");
 
 	@Getter
 	private final String configValue;

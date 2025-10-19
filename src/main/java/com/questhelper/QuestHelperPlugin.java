@@ -454,6 +454,11 @@ public class QuestHelperPlugin extends Plugin
 			String step = (String) (Arrays.stream(commandExecuted.getArguments()).toArray()[0]);
 			new RuneliteConfigSetter(configManager, QuestHelperQuest.COOKS_HELPER.getPlayerQuests().getConfigValue(), step).setConfigValue();
 		}
+		else if (developerMode && commandExecuted.getCommand().equals("reset-bruhsailer-guide"))
+		{
+			String step = (String) (Arrays.stream(commandExecuted.getArguments()).toArray()[0]);
+			new RuneliteConfigSetter(configManager, QuestHelperQuest.BRUHSAILER_GUIDE.getPlayerQuests().getConfigValue(), step).setConfigValue();
+		}
 		else if (developerMode && commandExecuted.getCommand().equals("qh-inv"))
 		{
 			ItemContainer inventory = client.getItemContainer(InventoryID.INV);
@@ -466,6 +471,14 @@ public class QuestHelperPlugin extends Plugin
 				}
 			}
 			log.debug(String.valueOf(inv));
+		}
+		else if (commandExecuted.getCommand().equals("qh-bruh-step"))
+		{
+			if (commandExecuted.getArguments().length >= 1)
+			{
+				String step = (String) (Arrays.stream(commandExecuted.getArguments()).toArray()[0]);
+				new RuneliteConfigSetter(configManager, QuestHelperQuest.BRUHSAILER_GUIDE.getPlayerQuests().getConfigValue(), step).setConfigValue();
+			}
 		}
 	}
 
@@ -586,24 +599,24 @@ public class QuestHelperPlugin extends Plugin
 		log.debug("Loaded quest helper {}", quest.name());
 	}
 
-    public void saveSidebarOrder(QuestHelper currentQuest, List<Integer> newOrderIds)
-    {
+	public void saveSidebarOrder(QuestHelper currentQuest, List<Integer> newOrderIds)
+	{
 		if (currentQuest == null || currentQuest.getQuest() == null) return;
 		configManager.setRSProfileConfiguration(QuestHelperConfig.QUEST_HELPER_GROUP, QuestHelperConfig.QUEST_HELPER_SIDEBAR_ORDER_KEY_START + currentQuest.getQuest().name(), newOrderIds);
-    }
+	}
 
 	public List<Integer> loadSidebarOrder(QuestHelper currentQuest)
 	{
 		if (currentQuest == null || currentQuest.getQuest() == null) return null;
 		String order = configManager.getRSProfileConfiguration(QuestHelperConfig.QUEST_HELPER_GROUP,
-				QuestHelperConfig.QUEST_HELPER_SIDEBAR_ORDER_KEY_START + currentQuest.getQuest().name());
+			QuestHelperConfig.QUEST_HELPER_SIDEBAR_ORDER_KEY_START + currentQuest.getQuest().name());
 		if (order == null) return null;
 		order = order.trim();
 		order = order.substring(1, order.length() - 1);
 		return Arrays.stream(order.split(","))
-				.map(String::trim)
-				.filter(s -> !s.isEmpty())
-				.map(Integer::parseInt)
-				.collect(Collectors.toList());
+			.map(String::trim)
+			.filter(s -> !s.isEmpty())
+			.map(Integer::parseInt)
+			.collect(Collectors.toList());
 	}
 }
