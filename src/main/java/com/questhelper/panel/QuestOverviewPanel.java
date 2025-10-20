@@ -96,10 +96,11 @@ public class QuestOverviewPanel extends JPanel
 	private final List<AbstractQuestSection> allQuestStepPanelList = new CopyOnWriteArrayList<>();
 
 	// Step sequence controls (for player-made quests)
-	private final JLabel sequenceLabel = JGenerator.makeJLabel();
-	private final JButton prevStepBtn = new JButton("<");
-	private final JButton nextStepBtn = new JButton(">");
-	private List<Integer> stateSequence = Collections.emptyList();
+    private final JLabel sequenceLabel = JGenerator.makeJLabel();
+    private final JButton prevStepBtn = new JButton("<");
+    private final JButton nextStepBtn = new JButton(">");
+    private List<Integer> stateSequence = Collections.emptyList();
+    private List<QuestStep> orderedSteps = Collections.emptyList();
 
 	public QuestOverviewPanel(QuestHelperPlugin questHelperPlugin, QuestManager questManager)
 	{
@@ -686,60 +687,98 @@ public class QuestOverviewPanel extends JPanel
 		sequenceLabel.setVisible(shouldShow);
 		if (!shouldShow) return;
 
-		// Build ordered state list from the top-level ConditionalStep
-		ConditionalStep root = (ConditionalStep) currentQuest.getCurrentStep();
-		List<Integer> states = new ArrayList<>();
-		for (Requirement req : root.getConditions())
-		{
-			if (req == null) continue;
-			if (req instanceof PlayerQuestStateRequirement)
-			{
-				String val = ((PlayerQuestStateRequirement) req).getExpectedValue();
-				try { states.add(Integer.parseInt(val)); } catch (NumberFormatException ignored) {}
-			}
-			// Only include explicit PlayerQuestStateRequirement entries
-		}
-		stateSequence = states;
+        // Build ordered step list from the visible sidebar steps in display order
+        List<QuestStep> stepsOrdered = new ArrayList<>();
+        for (AbstractQuestSection section : allQuestStepPanelList)
+        {
+            if (section instanceof QuestStepPanel)
+            {
+                for (QuestStep s : ((QuestStepPanel) section).getSteps())
+                {
+                    if (s != null && s.isShowInSidebar()) stepsOrdered.add(s);
+                }
+            }
+        }
+        orderedSteps = stepsOrdered;
+
+        // Build id list for jumping support (skip null ids)
+        List<Integer> ids = orderedSteps.stream().map(QuestStep::getId).filter(Objects::nonNull).collect(Collectors.toList());
+        stateSequence = ids;
 
 		// Determine current index and set label
-		String curStr = questHelperPlugin.getConfigManager().getRSProfileConfiguration(QuestHelperConfig.QUEST_BACKGROUND_GROUP,
-			currentQuest.getQuest().getPlayerQuests().getConfigValue());
-		int idx = -1;
-		try
-		{
-			int cur = Integer.parseInt(curStr == null ? "0" : curStr);
-			for (int i = 0; i < stateSequence.size(); i++)
-			{
-				if (stateSequence.get(i) == cur) { idx = i; break; }
-			}
-		}
-		catch (NumberFormatException ignored) {}
+        // Determine current index based on the active step
+        QuestStep active = currentQuest.getCurrentStep() != null ? currentQuest.getCurrentStep().getActiveStep() : null;
+        int idxActive = -1;
+        if (active != null)
+        {
+            for (int i = 0; i < orderedSteps.size(); i++)
+            {
+                QuestStep s = orderedSteps.get(i);
+                try {
+                    if (s.equals(active) || s.containsSteps(active, new HashSet<>())) { idxActive = i; break; }
+                } catch (Exception ignored) { }
+            }
+        }
+        int displayIdx = Math.max(0, idxActive);
+        sequenceLabel.setText(orderedSteps.isEmpty() ? "" : String.format("%d/%d", displayIdx + 1, orderedSteps.size()));
+	}
 
-		sequenceLabel.setText(stateSequence.isEmpty() ? "" : String.format("%d/%d", (idx >= 0 ? idx + 1 : 0), stateSequence.size()));
+	// Map state IDs to a logical ordering across sections (19 -> 20 -> 21 -> 22 -> 23)
+	// Numeric order is not sufficient since Step 23 (231-239) is lower than Step 22 (241-259).
+	private int sequenceOrderForState(int id)
+	{
+		// Step 19: 190-199
+		if (id >= 190 && id <= 199) return 0;
+		// Step 20: 200-209
+		if (id >= 200 && id <= 209) return 1;
+		// Step 21: 210-219
+		if (id >= 210 && id <= 219) return 2;
+		// Step 22: 241-259
+		if (id >= 241 && id <= 259) return 3;
+		// Step 23: 231-239
+		if (id >= 231 && id <= 239) return 4;
+		// Fallback to numeric blocks by hundreds if any other appear
+		return 5;
 	}
 
 	private void jumpRelative(int delta)
 	{
-		if (!isPlayerQuestWithSequence() || stateSequence.isEmpty()) return;
-		String key = currentQuest.getQuest().getPlayerQuests().getConfigValue();
-		String curStr = questHelperPlugin.getConfigManager().getRSProfileConfiguration(QuestHelperConfig.QUEST_BACKGROUND_GROUP, key);
-		int curIdx = -1;
-		try
-		{
-			int cur = Integer.parseInt(curStr == null ? "0" : curStr);
-			for (int i = 0; i < stateSequence.size(); i++)
-			{
-				if (stateSequence.get(i) == cur) { curIdx = i; break; }
-			}
-		}
-		catch (NumberFormatException ignored) {}
+        if (!isPlayerQuestWithSequence()) return;
 
-		int newIdx = curIdx + delta;
-		if (curIdx == -1) newIdx = Math.max(0, Math.min(stateSequence.size() - 1, delta > 0 ? 0 : stateSequence.size() - 1));
-		if (newIdx < 0 || newIdx >= stateSequence.size()) return;
+        // Ensure sequence is current
+        updateSequenceControls(false);
+        if (orderedSteps == null || orderedSteps.isEmpty()) return;
 
-		int newVal = stateSequence.get(newIdx);
-		new RuneliteConfigSetter(questHelperPlugin.getConfigManager(), key, Integer.toString(newVal)).setConfigValue();
-		updateSequenceControls(false);
+        // Find current index by active step
+        QuestStep active = currentQuest.getCurrentStep() != null ? currentQuest.getCurrentStep().getActiveStep() : null;
+        int curIdx = -1;
+        if (active != null)
+        {
+            for (int i = 0; i < orderedSteps.size(); i++)
+            {
+                QuestStep s = orderedSteps.get(i);
+                try {
+                    if (s.equals(active) || s.containsSteps(active, new HashSet<>())) { curIdx = i; break; }
+                } catch (Exception ignored) { }
+            }
+        }
+
+        int newIdx = (curIdx == -1) ? (delta > 0 ? 0 : orderedSteps.size() - 1) : curIdx + delta;
+        if (newIdx < 0 || newIdx >= orderedSteps.size()) return;
+
+        // Jump via the step's id; if null, scan until we find a step with an id
+        int scan = newIdx;
+        Integer targetId = orderedSteps.get(scan).getId();
+        int direction = delta == 0 ? 1 : (delta > 0 ? 1 : -1);
+        while (targetId == null)
+        {
+            scan += direction;
+            if (scan < 0 || scan >= orderedSteps.size()) return;
+            targetId = orderedSteps.get(scan).getId();
+        }
+
+        String key = currentQuest.getQuest().getPlayerQuests().getConfigValue();
+        new RuneliteConfigSetter(questHelperPlugin.getConfigManager(), key, Integer.toString(targetId)).setConfigValue();
+        updateSequenceControls(false);
 	}
 }

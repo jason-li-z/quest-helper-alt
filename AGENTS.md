@@ -23,9 +23,11 @@
 - Tests: `*Test` with clear, behavior-driven method names.
 - Annotations: JetBrains annotations allowed; Lombok is configured (compileOnly).
 
-## Implementing New Steps
+## Implementing Steps
 - For every step, if it requires an interaction/chat with NPC, highlight that NPC.
 - If it requires an action like thieve from a stall or need to do anything with some object, highlight that object too.
+- For any quests related steps, look at the source code from existing quest helper and highlight all the NPCs/ladders/objects, whatever it may be
+especially if it's 2+ floors and the highlighted text and ensure it is also implemented into the sequence of steps to follow.
 
 ## Architecture & Tips
 - Core entry: `QuestHelperPlugin` and `QuestHelperConfig`.

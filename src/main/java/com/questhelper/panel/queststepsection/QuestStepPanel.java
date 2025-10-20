@@ -52,7 +52,7 @@ public class QuestStepPanel extends AbstractQuestSection implements MouseListene
 	private static final int TITLE_PADDING = 5;
 
 	private final QuestHelperPlugin questHelperPlugin;
-	private final HashMap<QuestStep, JTextPane> steps = new HashMap<>();
+    private final java.util.LinkedHashMap<QuestStep, JTextPane> steps = new java.util.LinkedHashMap<>();
 	private final @Nullable QuestRequirementsPanel requiredItemsPanel;
 	private final @Nullable QuestRequirementsPanel recommendedItemsPanel;
 	private boolean stepAutoLocked;
@@ -210,10 +210,10 @@ public class QuestStepPanel extends AbstractQuestSection implements MouseListene
 		return text.toString();
 	}
 
-	public List<QuestStep> getSteps()
-	{
-		return new ArrayList<>(steps.keySet());
-	}
+    public List<QuestStep> getSteps()
+    {
+        return new ArrayList<>(steps.keySet());
+    }
 
 	public void setLockable(boolean canLock)
 	{

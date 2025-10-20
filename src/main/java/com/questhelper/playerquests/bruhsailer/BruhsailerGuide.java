@@ -9,6 +9,8 @@ import com.questhelper.requirements.item.ItemRequirement;
 import com.questhelper.steps.DetailedQuestStep;
 import com.questhelper.steps.NpcStep;
 import com.questhelper.steps.QuestStep;
+import com.questhelper.playerquests.bruhsailer.sections.Step19Section;
+import com.questhelper.playerquests.bruhsailer.sections.Step20Section;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.NpcID;
@@ -20,6 +22,11 @@ import java.util.List;
 
 public class BruhsailerGuide extends PlayerMadeQuestHelper
 {
+	private Step19Section step19;
+	private Step20Section step20;
+	private com.questhelper.playerquests.bruhsailer.sections.Step21Section step21;
+	private com.questhelper.playerquests.bruhsailer.sections.Step22Section step22;
+	private com.questhelper.playerquests.bruhsailer.sections.Step23Section step23;
 	// Step 19 items
 	private ItemRequirement coins1545, bronzePick, pohTab,
 		flour3, redberries3, onions6, woad2, pieDish, bucket,
@@ -64,67 +71,20 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 		var state = new com.questhelper.requirements.runelite.PlayerQuestStateRequirement(
 			configManager, getQuest().getPlayerQuests(), 0);
 
-		var flow = new com.questhelper.steps.ConditionalStep(this, bankStep);
-		flow.addStep(state.getNewState(195), ensureFoodItems);
-		flow.addStep(state.getNewState(194), buyChronicleCards);
-		flow.addStep(state.getNewState(193), makeDyesAggie);
-		flow.addStep(state.getNewState(192), mineClayCopper);
-		flow.addStep(state.getNewState(191), breakHouseTab);
-		flow.addStep(state.getNewState(190), bankStep);
+		// Sections 19/20 wired via helpers
+		step19 = new Step19Section(this);
+		step20 = new Step20Section(this);
+		var flow = new com.questhelper.steps.ConditionalStep(this, step19.getDefaultStep());
+		step19.wire(flow, state);
+		step20.wire(flow, state);
 
-		// Step 20 jumps
-		flow.addStep(state.getNewState(208), captainMagoroToPiscarilius);
-		flow.addStep(state.getNewState(207), grabHunterSupplies);
-		flow.addStep(state.getNewState(206), veosToLandsEnd);
-		flow.addStep(state.getNewState(205), veosCompleteCoK);
-		flow.addStep(state.getNewState(204), veosToZeah);
-		flow.addStep(state.getNewState(203), buyRunesBetty);
-		flow.addStep(state.getNewState(202), talkThurgo);
-		flow.addStep(state.getNewState(201), buyFeathersGerrant);
-		flow.addStep(state.getNewState(200), makePastryAndPies);
-
-		// Step 21 jumps
-		flow.addStep(state.getNewState(219), digSaltpetre);
-		flow.addStep(state.getNewState(218), bankFruitAndTops);
-		flow.addStep(state.getNewState(217), pickpocketFruitStalls);
-		flow.addStep(state.getNewState(216), buyCompostPack);
-		flow.addStep(state.getNewState(215), talkEstateAgent);
-		flow.addStep(state.getNewState(214), killRatHosidius);
-		flow.addStep(state.getNewState(213), enterWarrensSearch);
-		flow.addStep(state.getNewState(212), talkRobertWithStew);
-		flow.addStep(state.getNewState(211), talkPoorLookingWoman);
-		flow.addStep(state.getNewState(210), startQueenOfThieves);
-		flow.addStep(state.getNewState(209), piscariliusPrep);
-		// Step 22 jumps (shifted to unique range 241-259)
-		flow.addStep(state.getNewState(259), feroxRestoreAndBank);
-		flow.addStep(state.getNewState(258), startFishingContest);
-		flow.addStep(state.getNewState(257), buyFromJatix);
-		flow.addStep(state.getNewState(256), completeDruidicRitual);
-		flow.addStep(state.getNewState(255), completeWitchsHouse);
-		flow.addStep(state.getNewState(254), completeGoblinDiplomacy);
-		flow.addStep(state.getNewState(253), killBearSafespot);
-		flow.addStep(state.getNewState(252), startBelowIceMountain);
-		flow.addStep(state.getNewState(251), startDoricsQuest);
-		flow.addStep(state.getNewState(250), bankForBulkMats);
-		flow.addStep(state.getNewState(249), completePiratesTreasure);
-		flow.addStep(state.getNewState(248), killDuckMagic);
-		flow.addStep(state.getNewState(247), makeMoltenGlass);
-		flow.addStep(state.getNewState(246), talkSirRenitee);
-		flow.addStep(state.getNewState(245), faladorPortraitCupboard);
-		flow.addStep(state.getNewState(244), continueEAAUntilPortSarim);
-		flow.addStep(state.getNewState(243), reginusToVarlamore);
-		flow.addStep(state.getNewState(242), bankFaladorGlassKit);
-		flow.addStep(state.getNewState(241), buyStavesZaff);
-		// Step 23 jumps
-		flow.addStep(state.getNewState(239), smeltBluriteBar);
-		flow.addStep(state.getNewState(238), completeKnightsSword);
-		flow.addStep(state.getNewState(237), moveHousePollnivneach);
-		flow.addStep(state.getNewState(236), faladorEastBankGrab);
-		flow.addStep(state.getNewState(235), eaaTalkBetty);
-		flow.addStep(state.getNewState(234), eaaCrewmemberPortSarim);
-		flow.addStep(state.getNewState(233), makeSwordThurgo);
-		flow.addStep(state.getNewState(232), mineBluriteTwo);
-		flow.addStep(state.getNewState(231), thurgoPohTab);
+		// Build sections 21, 22, 23
+		step21 = new com.questhelper.playerquests.bruhsailer.sections.Step21Section(this);
+		step22 = new com.questhelper.playerquests.bruhsailer.sections.Step22Section(this);
+		step23 = new com.questhelper.playerquests.bruhsailer.sections.Step23Section(this);
+		step21.wire(flow, state);
+		step22.wire(flow, state);
+		step23.wire(flow, state);
 		return flow;
 	}
 
@@ -380,22 +340,11 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 	public List<PanelDetails> getPanels()
 	{
 		List<PanelDetails> p = new ArrayList<>();
-		p.add(new PanelDetails("Step 19 — Prep & Dyes", Arrays.asList(
-			bankStep, breakHouseTab, mineClayCopper, makeDyesAggie, buyChronicleCards, ensureFoodItems
-		)));
-		p.add(new PanelDetails("Step 20 — Port Sarim → Kourend", Arrays.asList(
-			makePastryAndPies, buyFeathersGerrant, talkThurgo, buyRunesBetty, veosToZeah, veosCompleteCoK, veosToLandsEnd, grabHunterSupplies, captainMagoroToPiscarilius, fletchWhileWalking
-		)));
-		p.add(new PanelDetails("Step 21 — Piscarilius & Hosidius", Arrays.asList(
-			piscariliusPrep, startQueenOfThieves, talkPoorLookingWoman, talkRobertWithStew, enterWarrensSearch, killRatHosidius, talkEstateAgent, buyCompostPack, pickpocketFruitStalls, bankFruitAndTops, digSaltpetre
-		)));
-		p.add(new PanelDetails("Step 22 — Varrock → Varlamore → Falador", Arrays.asList(
-			buyStavesZaff, bankFaladorGlassKit, reginusToVarlamore, continueEAAUntilPortSarim, faladorPortraitCupboard, talkSirRenitee, makeMoltenGlass, killDuckMagic, completePiratesTreasure,
-			bankForBulkMats, startDoricsQuest, startBelowIceMountain, killBearSafespot, completeGoblinDiplomacy, completeWitchsHouse, completeDruidicRitual, buyFromJatix, startFishingContest, feroxRestoreAndBank
-		)));
-		p.add(new PanelDetails("Step 23 — Thurgo, EAA, Falador", Arrays.asList(
-			thurgoPohTab, mineBluriteTwo, makeSwordThurgo, eaaCrewmemberPortSarim, eaaTalkBetty, faladorEastBankGrab, moveHousePollnivneach, completeKnightsSword, smeltBluriteBar
-		)));
+		p.add(step19.getPanel());
+		p.add(step20.getPanel());
+		p.add(step21.getPanel());
+		p.add(step22.getPanel());
+		p.add(step23.getPanel());
 		return p;
 	}
 
@@ -405,3 +354,7 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 		return Collections.emptyList();
 	}
 }
+
+
+
+
