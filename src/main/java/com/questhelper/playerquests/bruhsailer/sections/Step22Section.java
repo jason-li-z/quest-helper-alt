@@ -17,12 +17,12 @@ public class Step22Section
 {
     private final BruhsailerGuide quest;
 
-    private NpcStep buyStavesZaff;
+    private NpcStep buyStavesZaff, buyFromJatix, startFishingContest;
     private DetailedQuestStep bankFaladorGlassKit, reginusToVarlamore, continueEAAUntilPortSarim,
             completePiratesTreasure, bankForBulkMats,
             killBearSafespot, completeGoblinDiplomacy, completeWitchsHouse, completeDruidicRitual,
-            buyFromJatix, feroxRestoreAndBank;
-    private NpcStep talkSirRenitee, killDuckMagic, startDoricsQuest, startBelowIceMountain, startFishingContest;
+            feroxRestoreAndBank;
+    private NpcStep talkSirRenitee, killDuckMagic, startDoricsQuest, startBelowIceMountain;
     private ObjectStep faladorPortraitCupboard, makeMoltenGlass;
 
     public Step22Section(BruhsailerGuide quest)
@@ -79,11 +79,19 @@ public class Step22Section
         completeWitchsHouse = new DetailedQuestStep(quest, "[22.13] Complete Witch's House (safespots exist for all forms). Use the quest helper.");
         completeDruidicRitual = new DetailedQuestStep(quest, "[22.13] Complete Druidic Ritual using the quest helper.");
 
-        buyFromJatix = new DetailedQuestStep(quest, new WorldPoint(2926, 3439, 0),
-                "[22.14] Buy an eye of newt pack, a single empty vial, and a pestle and mortar from Jatix in Taverley.");
+        buyFromJatix = new NpcStep(quest, NpcID.JATIX, new WorldPoint(2926, 3439, 0),
+                "[22.14] Speak with Jatix in Taverley and buy an eye of newt pack, one empty vial, and a pestle and mortar.");
+        buyFromJatix.addDialogSteps("Do you have anything to trade?");
 
-        startFishingContest = new NpcStep(quest, NpcID.BONZO, new WorldPoint(2641, 3437, 0),
-                "[22.15] Start Fishing Contest by speaking to Bonzo in Hemenster.");
+        startFishingContest = new NpcStep(quest, NpcID.TUNNEL_DWARF1, new WorldPoint(2821, 3486, 0),
+                "[22.15] Speak to Vestri north of Catherby to start Fishing Contest, following the quest helper dialogue.");
+        startFishingContest.addDialogSteps(
+                "I was wondering what was down those stairs?",
+                "Why not?",
+                "If you were my friend I wouldn't mind it.",
+                "Well, let's be friends!",
+                "And how am I meant to do that?",
+                "Yes.");
 
         feroxRestoreAndBank = new DetailedQuestStep(quest,
                 "[22.16] Minigame teleport to Clan Wars (Ferox), restore energy, bank, then withdraw: 2 iron bars, a POH tab, the portrait, 3-5 cakes and a pickaxe.");
@@ -120,4 +128,3 @@ public class Step22Section
         ));
     }
 }
-

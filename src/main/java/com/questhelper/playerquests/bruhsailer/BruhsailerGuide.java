@@ -27,6 +27,7 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 	private com.questhelper.playerquests.bruhsailer.sections.Step21Section step21;
 	private com.questhelper.playerquests.bruhsailer.sections.Step22Section step22;
 	private com.questhelper.playerquests.bruhsailer.sections.Step23Section step23;
+	private com.questhelper.playerquests.bruhsailer.sections.Step24Section step24;
 	// Step 19 items
 	private ItemRequirement coins1545, bronzePick, pohTab,
 		flour3, redberries3, onions6, woad2, pieDish, bucket,
@@ -53,14 +54,12 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 	private NpcStep startQueenOfThieves, talkPoorLookingWoman, talkRobertWithStew;
 
 	// Step 22/23 fields
-	private NpcStep buyStavesZaff;
+	private NpcStep buyStavesZaff, talkSirRenitee, killDuckMagic, startDoricsQuest, startBelowIceMountain,
+		buyFromJatix, startFishingContest, makeSwordThurgo, eaaCrewmemberPortSarim, eaaTalkBetty, moveHousePollnivneach;
 	private DetailedQuestStep bankFaladorGlassKit, reginusToVarlamore, continueEAAUntilPortSarim,
-		faladorPortraitCupboard, talkSirRenitee, makeMoltenGlass, killDuckMagic,
-		completePiratesTreasure, bankForBulkMats, startDoricsQuest, startBelowIceMountain,
-		killBearSafespot, completeGoblinDiplomacy, completeWitchsHouse, completeDruidicRitual,
-		buyFromJatix, startFishingContest, feroxRestoreAndBank,
-		thurgoPohTab, mineBluriteTwo, makeSwordThurgo, eaaCrewmemberPortSarim, eaaTalkBetty,
-		faladorEastBankGrab, moveHousePollnivneach, completeKnightsSword, smeltBluriteBar;
+		faladorPortraitCupboard, makeMoltenGlass, completePiratesTreasure, bankForBulkMats,
+		killBearSafespot, completeGoblinDiplomacy, completeWitchsHouse, completeDruidicRitual, feroxRestoreAndBank,
+		thurgoPohTab, mineBluriteTwo, faladorEastBankGrab, completeKnightsSword, smeltBluriteBar;
 
 	@Override
 	public QuestStep loadStep()
@@ -82,9 +81,11 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 		step21 = new com.questhelper.playerquests.bruhsailer.sections.Step21Section(this);
 		step22 = new com.questhelper.playerquests.bruhsailer.sections.Step22Section(this);
 		step23 = new com.questhelper.playerquests.bruhsailer.sections.Step23Section(this);
+		step24 = new com.questhelper.playerquests.bruhsailer.sections.Step24Section(this);
 		step21.wire(flow, state);
 		step22.wire(flow, state);
 		step23.wire(flow, state);
+		step24.wire(flow, state);
 		return flow;
 	}
 
@@ -259,7 +260,7 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 			"[22.4] Break Falador tab. In Falador Castle (2F), search the cupboard south of the staircase for the portrait.");
 
 		// [22.5] Falador: speak with Sir Renitee (diary)
-		talkSirRenitee = new DetailedQuestStep(this, new WorldPoint(2982, 3341, 1),
+		talkSirRenitee = new NpcStep(this, NpcID.POH_HERALD_OF_FALADOR, new WorldPoint(2982, 3341, 1),
 			"[22.5] Speak with Sir Renitee upstairs in White Knights' Castle for the diary.");
 
 		// [22.6] Make molten glass (Falador furnace or any furnace)
@@ -284,7 +285,7 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 			"[22.10] Run north and speak to Doric to start/complete Doric's Quest using the quest helper.");
 
 		// [22.11] Below Ice Mountain start (Willow)
-		startBelowIceMountain = new DetailedQuestStep(this, new WorldPoint(3003, 3435, 0),
+		startBelowIceMountain = new NpcStep(this, NpcID.BIM_WILLOW, new WorldPoint(3003, 3435, 0),
 			"[22.11] Start Below Ice Mountain by speaking to Willow south of Ice Mountain.");
 
 		// [22.12] Safespot bear north of Falador
@@ -297,12 +298,20 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 		completeDruidicRitual = new DetailedQuestStep(this, "[22.13] Complete Druidic Ritual using the quest helper.");
 
 		// [22.14] Jatix (Taverley)
-		buyFromJatix = new DetailedQuestStep(this, new WorldPoint(2926, 3439, 0),
-			"[22.14] Buy an eye of newt pack, a single empty vial, and a pestle and mortar from Jatix in Taverley.");
+		buyFromJatix = new NpcStep(this, NpcID.JATIX, new WorldPoint(2926, 3439, 0),
+			"[22.14] Speak with Jatix in Taverley and buy an eye of newt pack, one empty vial, and a pestle and mortar.");
+		((NpcStep) buyFromJatix).addDialogStep("Do you have anything to trade?");
 
 		// [22.15] Start Fishing Contest
-		startFishingContest = new NpcStep(this, NpcID.BONZO, new WorldPoint(2641, 3437, 0),
-			"[22.15] Start Fishing Contest by speaking to Bonzo in Hemenster.");
+		startFishingContest = new NpcStep(this, NpcID.TUNNEL_DWARF1, new WorldPoint(2821, 3486, 0),
+			"[22.15] Speak to Vestri north of Catherby to start Fishing Contest, following the quest helper dialogue.");
+		((NpcStep) startFishingContest).addDialogSteps(
+			"I was wondering what was down those stairs?",
+			"Why not?",
+			"If you were my friend I wouldn't mind it.",
+			"Well, let's be friends!",
+			"And how am I meant to do that?",
+			"Yes.");
 
 		// [22.16] Ferox restore and bank
 		feroxRestoreAndBank = new DetailedQuestStep(this,
@@ -328,7 +337,7 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 		faladorEastBankGrab = new DetailedQuestStep(this, new WorldPoint(3013, 3353, 0),
 			"[23.6] Run to Falador east bank; withdraw coins (7,500 gp), Ghostspeak amulet, and the Ghost's skull.");
 		// [23.7] Move house to Pollnivneach
-		moveHousePollnivneach = new DetailedQuestStep(this,
+		moveHousePollnivneach = new NpcStep(this, NpcID.POH_ESTATE_AGENT, new WorldPoint(3240, 3475, 0),
 			"[23.7] Speak to an Estate Agent and pay to move your house to Pollnivneach.");
 		// [23.8] Complete The Knight's Sword
 		completeKnightsSword = new DetailedQuestStep(this, "[23.8] Complete The Knight's Sword using the quest helper.");
@@ -345,6 +354,7 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 		p.add(step21.getPanel());
 		p.add(step22.getPanel());
 		p.add(step23.getPanel());
+		p.add(step24.getPanel());
 		return p;
 	}
 
