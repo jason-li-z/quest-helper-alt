@@ -95,26 +95,26 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 		flow.addStep(state.getNewState(211), talkPoorLookingWoman);
 		flow.addStep(state.getNewState(210), startQueenOfThieves);
 		flow.addStep(state.getNewState(209), piscariliusPrep);
-		// Step 22 jumps
-		flow.addStep(state.getNewState(229), feroxRestoreAndBank);
-		flow.addStep(state.getNewState(228), startFishingContest);
-		flow.addStep(state.getNewState(227), buyFromJatix);
-		flow.addStep(state.getNewState(226), completeDruidicRitual);
-		flow.addStep(state.getNewState(225), completeWitchsHouse);
-		flow.addStep(state.getNewState(224), completeGoblinDiplomacy);
-		flow.addStep(state.getNewState(223), killBearSafespot);
-		flow.addStep(state.getNewState(222), startBelowIceMountain);
-		flow.addStep(state.getNewState(221), startDoricsQuest);
-		flow.addStep(state.getNewState(220), bankForBulkMats);
-		flow.addStep(state.getNewState(219), completePiratesTreasure);
-		flow.addStep(state.getNewState(218), killDuckMagic);
-		flow.addStep(state.getNewState(217), makeMoltenGlass);
-		flow.addStep(state.getNewState(216), talkSirRenitee);
-		flow.addStep(state.getNewState(215), faladorPortraitCupboard);
-		flow.addStep(state.getNewState(214), continueEAAUntilPortSarim);
-		flow.addStep(state.getNewState(213), reginusToVarlamore);
-		flow.addStep(state.getNewState(212), bankFaladorGlassKit);
-		flow.addStep(state.getNewState(211), buyStavesZaff);
+		// Step 22 jumps (shifted to unique range 241-259)
+		flow.addStep(state.getNewState(259), feroxRestoreAndBank);
+		flow.addStep(state.getNewState(258), startFishingContest);
+		flow.addStep(state.getNewState(257), buyFromJatix);
+		flow.addStep(state.getNewState(256), completeDruidicRitual);
+		flow.addStep(state.getNewState(255), completeWitchsHouse);
+		flow.addStep(state.getNewState(254), completeGoblinDiplomacy);
+		flow.addStep(state.getNewState(253), killBearSafespot);
+		flow.addStep(state.getNewState(252), startBelowIceMountain);
+		flow.addStep(state.getNewState(251), startDoricsQuest);
+		flow.addStep(state.getNewState(250), bankForBulkMats);
+		flow.addStep(state.getNewState(249), completePiratesTreasure);
+		flow.addStep(state.getNewState(248), killDuckMagic);
+		flow.addStep(state.getNewState(247), makeMoltenGlass);
+		flow.addStep(state.getNewState(246), talkSirRenitee);
+		flow.addStep(state.getNewState(245), faladorPortraitCupboard);
+		flow.addStep(state.getNewState(244), continueEAAUntilPortSarim);
+		flow.addStep(state.getNewState(243), reginusToVarlamore);
+		flow.addStep(state.getNewState(242), bankFaladorGlassKit);
+		flow.addStep(state.getNewState(241), buyStavesZaff);
 		// Step 23 jumps
 		flow.addStep(state.getNewState(239), smeltBluriteBar);
 		flow.addStep(state.getNewState(238), completeKnightsSword);
@@ -180,8 +180,8 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 			"Blue dye."
 		);
 
-		// [19.4] Buy 10 Chronicle cards (Diango)
-		buyChronicleCards = new DetailedQuestStep(this, new WorldPoint(3087, 3251, 0),
+		// [19.4] Buy 10 Chronicle cards (Diango - APRILFOOLSHORSESALESMAN)
+		buyChronicleCards = new NpcStep(this, NpcID.APRILFOOLSHORSESALESMAN, new WorldPoint(3087, 3251, 0),
 			"[19.4] Buy 10 Chronicle cards from Diango in Draynor.", coins1545);
 
 		// [19.5] Ensure items are ready
@@ -195,7 +195,7 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 			flour3, bucket, pieDish, redberries3);
 
 		// [20.1] Buy 16k feathers (and extras if needed for 46 Fletching)
-		buyFeathersGerrant = new DetailedQuestStep(this, new WorldPoint(3013, 3224, 0),
+		buyFeathersGerrant = new NpcStep(this, NpcID.GERRANT, new WorldPoint(3013, 3224, 0),
 			"[20.1] Buy 16,000 feathers from Gerrant's Fishy Business (Port Sarim). If not 46 Fletching, buy enough extra feathers to reach it.", coins95672);
 
 		// [20.2] Speak with Thurgo (The Knight's Sword)
@@ -203,20 +203,23 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 			"[20.2] Speak with Thurgo on Mudskipper Point to progress The Knight's Sword.");
 
 		// [20.3] Buy rune packs from Betty
-		buyRunesBetty = new DetailedQuestStep(this, new WorldPoint(3014, 3258, 0),
+		buyRunesBetty = new NpcStep(this, NpcID.BETTY, new WorldPoint(3014, 3258, 0),
 			"[20.3] Buy: 1500 mind (pack), 500 air (pack), 1500 water (pack), 500 earth (pack), 500 fire (pack), 200 body (manual), 100 chaos (manual), 150 death (manual) from Betty's Magic Emporium.", coins95672);
 
 		// [20.4] Veos → Zeah
-		veosToZeah = new DetailedQuestStep(this, new WorldPoint(3054, 3245, 0),
+		veosToZeah = new NpcStep(this, NpcID.VEOS_VISIBLE, new WorldPoint(3054, 3245, 0),
 			"[20.4] Talk to Veos in Port Sarim to sail to Great Kourend.", coins95672);
+		((NpcStep) veosToZeah).addAlternateNpcs(NpcID.VEOS_VISIBLE_TRAVEL);
 
 		// [20.5] Complete Client of Kourend (turn in to Veos)
-		veosCompleteCoK = new DetailedQuestStep(this, new WorldPoint(1824, 3690, 0),
+		veosCompleteCoK = new NpcStep(this, NpcID.VEOS_VISIBLE, new WorldPoint(1824, 3690, 0),
 			"[20.5] Talk to Veos on the Port Piscarilius docks and complete Client of Kourend (destroy lamps; reclaim later for Herblore).");
+		((NpcStep) veosCompleteCoK).addAlternateNpcs(NpcID.VEOS_VISIBLE_TRAVEL);
 
 		// [20.6] Veos → Land's End
-		veosToLandsEnd = new DetailedQuestStep(this, new WorldPoint(1824, 3690, 0),
+		veosToLandsEnd = new NpcStep(this, NpcID.VEOS_VISIBLE, new WorldPoint(1824, 3690, 0),
 			"[20.6] Talk to Veos again to travel to Land's End.");
+		((NpcStep) veosToLandsEnd).addAlternateNpcs(NpcID.VEOS_VISIBLE_TRAVEL);
 
 		// [20.7] Grab hunter supplies
 		grabHunterSupplies = new DetailedQuestStep(this, new WorldPoint(1506, 3447, 0),
@@ -258,7 +261,7 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 			"[21.5] Head south to Hosidius and kill a Giant Rat north-east of Hosidius square for its meat and a giant rat bone.");
 
 		// [21.6] Talk to the Estate Agent (to be able to move POH later)
-		talkEstateAgent = new DetailedQuestStep(this, new WorldPoint(1749, 3626, 0),
+		talkEstateAgent = new NpcStep(this, NpcID.POH_ESTATE_AGENT, new WorldPoint(1749, 3626, 0),
 			"[21.6] Speak to the Estate Agent in Hosidius to unlock moving your POH to Kourend later.");
 
 		// [21.7] Buy a compost pack from Vannah
@@ -304,8 +307,9 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 			"[22.6] Turn the 7 soda ash and 7 sand into molten glass at a furnace.");
 
 		// [22.7] Kill a duck with magic (Falador Park)
-		killDuckMagic = new DetailedQuestStep(this, new WorldPoint(2989, 3379, 0),
+		killDuckMagic = new NpcStep(this, NpcID.DUCK_FEMALE, new WorldPoint(2989, 3379, 0),
 			"[22.7] Kill a duck in Falador Park using Wind Strike.");
+		((NpcStep) killDuckMagic).addAlternateNpcs(NpcID.DUCK);
 
 		// [22.8] Complete Pirate's Treasure
 		completePiratesTreasure = new DetailedQuestStep(this,
@@ -316,8 +320,8 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 			"[22.9] Bank then withdraw: raw beef, chicken and rat meat; orange + blue dye (or red+yellow to make orange); 2 iron ore, 4 copper ore, 6 clay, 2 cheese, gp stack and 3+ cakes/wines; pickaxe.");
 
 		// [22.10] Doric's Quest
-		startDoricsQuest = new DetailedQuestStep(this,
-			"[22.10] Run north and complete Doric's Quest using the quest helper.");
+		startDoricsQuest = new NpcStep(this, NpcID.DORIC, new WorldPoint(2951, 3451, 0),
+			"[22.10] Run north and speak to Doric to start/complete Doric's Quest using the quest helper.");
 
 		// [22.11] Below Ice Mountain start (Willow)
 		startBelowIceMountain = new DetailedQuestStep(this, new WorldPoint(3003, 3435, 0),
@@ -337,7 +341,7 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 			"[22.14] Buy an eye of newt pack, a single empty vial, and a pestle and mortar from Jatix in Taverley.");
 
 		// [22.15] Start Fishing Contest
-		startFishingContest = new DetailedQuestStep(this, new WorldPoint(2641, 3437, 0),
+		startFishingContest = new NpcStep(this, NpcID.BONZO, new WorldPoint(2641, 3437, 0),
 			"[22.15] Start Fishing Contest by speaking to Bonzo in Hemenster.");
 
 		// [22.16] Ferox restore and bank
@@ -352,13 +356,13 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 		mineBluriteTwo = new DetailedQuestStep(this, new WorldPoint(3049, 9566, 0),
 			"[23.2] Enter the dungeon south of Port Sarim and mine two blurite ore.");
 		// [23.3] Return to Thurgo and make the sword
-		makeSwordThurgo = new DetailedQuestStep(this, new WorldPoint(3000, 3145, 0),
+		makeSwordThurgo = new NpcStep(this, NpcID.THURGO, new WorldPoint(3000, 3145, 0),
 			"[23.3] Return to Thurgo with 2 iron bars and make the sword.");
 		// [23.4] EAA: Trader Crewmember in Port Sarim
-		eaaCrewmemberPortSarim = new DetailedQuestStep(this, new WorldPoint(3036, 3194, 0),
+		eaaCrewmemberPortSarim = new NpcStep(this, NpcID.SAILING_TRANSPORT_TRADER_STAN_BASE, new WorldPoint(3036, 3194, 0),
 			"[23.4] Speak to Trader Stan (southern deck) in Port Sarim for Ethically Acquired Antiquities.");
 		// [23.5] EAA: Talk to Betty
-		eaaTalkBetty = new DetailedQuestStep(this, new WorldPoint(3011, 3260, 0),
+		eaaTalkBetty = new NpcStep(this, NpcID.SARIM_BETTY, new WorldPoint(3011, 3260, 0),
 			"[23.5] Talk to Betty at the Rune shop to progress Ethically Acquired Antiquities.");
 		// [23.6] Falador east bank; grab items
 		faladorEastBankGrab = new DetailedQuestStep(this, new WorldPoint(3013, 3353, 0),

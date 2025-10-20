@@ -39,6 +39,9 @@ import com.questhelper.requirements.quest.QuestPointRequirement;
 import com.questhelper.requirements.quest.QuestRequirement;
 import com.questhelper.steps.DetailedQuestStep;
 import com.questhelper.steps.QuestStep;
+import com.questhelper.steps.ConditionalStep;
+import com.questhelper.requirements.runelite.PlayerQuestStateRequirement;
+import com.questhelper.runeliteobjects.RuneliteConfigSetter;
 import com.questhelper.tools.Icon;
 import com.questhelper.util.Fonts;
 import lombok.Getter;
@@ -92,6 +95,12 @@ public class QuestOverviewPanel extends JPanel
 	private static final ImageIcon CLOSE_ICON = Icon.CLOSE.getIcon();
 	private final List<AbstractQuestSection> allQuestStepPanelList = new CopyOnWriteArrayList<>();
 
+	// Step sequence controls (for player-made quests)
+	private final JLabel sequenceLabel = JGenerator.makeJLabel();
+	private final JButton prevStepBtn = new JButton("<");
+	private final JButton nextStepBtn = new JButton(">");
+	private List<Integer> stateSequence = Collections.emptyList();
+
 	public QuestOverviewPanel(QuestHelperPlugin questHelperPlugin, QuestManager questManager)
 	{
 		super();
@@ -109,7 +118,7 @@ public class QuestOverviewPanel extends JPanel
 		actionsContainer.setBorder(new EmptyBorder(5, 5, 5, 10));
 		actionsContainer.setVisible(false);
 
-		final JPanel viewControls = new JPanel(new GridLayout(1, 3, 10, 0));
+		final JPanel viewControls = new JPanel(new GridLayout(1, 5, 10, 0));
 		viewControls.setBackground(ColorScheme.DARKER_GRAY_COLOR);
 
 		JButton closeBtn = new JButton();
@@ -120,6 +129,21 @@ public class QuestOverviewPanel extends JPanel
 		closeBtn.setUI(new BasicButtonUI());
 		closeBtn.addActionListener(ev -> closeHelper());
 		viewControls.add(closeBtn);
+
+		// Sequence controls (hidden by default; shown for player-made quests)
+		sequenceLabel.setForeground(Color.WHITE);
+		sequenceLabel.setText("");
+		sequenceLabel.setVisible(false);
+
+		configureNavButton(prevStepBtn, "Jump to previous step");
+		configureNavButton(nextStepBtn, "Jump to next step");
+
+		prevStepBtn.addActionListener(ev -> jumpRelative(-1));
+		nextStepBtn.addActionListener(ev -> jumpRelative(1));
+
+		viewControls.add(prevStepBtn);
+		viewControls.add(sequenceLabel);
+		viewControls.add(nextStepBtn);
 
 		actionsContainer.add(viewControls, BorderLayout.EAST);
 
@@ -275,6 +299,8 @@ public class QuestOverviewPanel extends JPanel
 			setupQuestRequirements(quest);
 			introPanel.setVisible(true);
 
+			updateSequenceControls(true);
+
 			for (PanelDetails panelDetail : steps)
 			{
 				if (panelDetail instanceof TopLevelPanelDetails)
@@ -307,6 +333,8 @@ public class QuestOverviewPanel extends JPanel
 		allQuestStepPanelList.forEach(panel -> {
 			panel.updateHighlightCheck(client, newStep, currentQuest);
 		});
+
+		updateSequenceControls(false);
 
 		repaint();
 		revalidate();
@@ -623,5 +651,95 @@ public class QuestOverviewPanel extends JPanel
 			.collect(Collectors.toList());
 
 		questHelperPlugin.saveSidebarOrder(currentQuest, newOrderIds);
+	}
+
+	private void configureNavButton(JButton btn, String tooltip)
+	{
+		SwingUtil.removeButtonDecorations(btn);
+		btn.setBackground(ColorScheme.DARKER_GRAY_COLOR);
+		btn.setForeground(Color.WHITE);
+		btn.setUI(new BasicButtonUI());
+		btn.setToolTipText(tooltip);
+		btn.setVisible(false);
+	}
+
+	private boolean isPlayerQuestWithSequence()
+	{
+		try
+		{
+			if (currentQuest == null) return false;
+			if (currentQuest.getQuest() == null || currentQuest.getQuest().getPlayerQuests() == null) return false;
+			QuestStep step = currentQuest.getCurrentStep();
+			return step instanceof ConditionalStep;
+		}
+		catch (Exception ignored)
+		{
+			return false;
+		}
+	}
+
+	private void updateSequenceControls(boolean firstSetup)
+	{
+		boolean shouldShow = isPlayerQuestWithSequence();
+		prevStepBtn.setVisible(shouldShow);
+		nextStepBtn.setVisible(shouldShow);
+		sequenceLabel.setVisible(shouldShow);
+		if (!shouldShow) return;
+
+		// Build ordered state list from the top-level ConditionalStep
+		ConditionalStep root = (ConditionalStep) currentQuest.getCurrentStep();
+		List<Integer> states = new ArrayList<>();
+		for (Requirement req : root.getConditions())
+		{
+			if (req == null) continue;
+			if (req instanceof PlayerQuestStateRequirement)
+			{
+				String val = ((PlayerQuestStateRequirement) req).getExpectedValue();
+				try { states.add(Integer.parseInt(val)); } catch (NumberFormatException ignored) {}
+			}
+			// Only include explicit PlayerQuestStateRequirement entries
+		}
+		stateSequence = states;
+
+		// Determine current index and set label
+		String curStr = questHelperPlugin.getConfigManager().getRSProfileConfiguration(QuestHelperConfig.QUEST_BACKGROUND_GROUP,
+			currentQuest.getQuest().getPlayerQuests().getConfigValue());
+		int idx = -1;
+		try
+		{
+			int cur = Integer.parseInt(curStr == null ? "0" : curStr);
+			for (int i = 0; i < stateSequence.size(); i++)
+			{
+				if (stateSequence.get(i) == cur) { idx = i; break; }
+			}
+		}
+		catch (NumberFormatException ignored) {}
+
+		sequenceLabel.setText(stateSequence.isEmpty() ? "" : String.format("%d/%d", (idx >= 0 ? idx + 1 : 0), stateSequence.size()));
+	}
+
+	private void jumpRelative(int delta)
+	{
+		if (!isPlayerQuestWithSequence() || stateSequence.isEmpty()) return;
+		String key = currentQuest.getQuest().getPlayerQuests().getConfigValue();
+		String curStr = questHelperPlugin.getConfigManager().getRSProfileConfiguration(QuestHelperConfig.QUEST_BACKGROUND_GROUP, key);
+		int curIdx = -1;
+		try
+		{
+			int cur = Integer.parseInt(curStr == null ? "0" : curStr);
+			for (int i = 0; i < stateSequence.size(); i++)
+			{
+				if (stateSequence.get(i) == cur) { curIdx = i; break; }
+			}
+		}
+		catch (NumberFormatException ignored) {}
+
+		int newIdx = curIdx + delta;
+		if (curIdx == -1) newIdx = Math.max(0, Math.min(stateSequence.size() - 1, delta > 0 ? 0 : stateSequence.size() - 1));
+		if (newIdx < 0 || newIdx >= stateSequence.size()) return;
+
+		int newVal = stateSequence.get(newIdx);
+		new RuneliteConfigSetter(questHelperPlugin.getConfigManager(), key, Integer.toString(newVal)).setConfigValue();
+		updateSequenceControls(false);
 	}
 }
