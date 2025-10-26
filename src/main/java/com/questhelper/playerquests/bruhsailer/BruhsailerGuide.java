@@ -11,6 +11,9 @@ import com.questhelper.steps.NpcStep;
 import com.questhelper.steps.QuestStep;
 import com.questhelper.playerquests.bruhsailer.sections.Step19Section;
 import com.questhelper.playerquests.bruhsailer.sections.Step20Section;
+import com.questhelper.playerquests.bruhsailer.sections.Step32Section;
+import com.questhelper.playerquests.bruhsailer.sections.Step35Section;
+import com.questhelper.playerquests.bruhsailer.sections.Step36Section;
 import net.runelite.api.coords.WorldPoint;
 import net.runelite.api.gameval.ItemID;
 import net.runelite.api.gameval.NpcID;
@@ -28,6 +31,9 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 	private com.questhelper.playerquests.bruhsailer.sections.Step22Section step22;
 	private com.questhelper.playerquests.bruhsailer.sections.Step23Section step23;
 	private com.questhelper.playerquests.bruhsailer.sections.Step24Section step24;
+	private Step32Section step32;
+	private Step35Section step35;
+	private Step36Section step36;
 	// Step 19 items
 	private ItemRequirement coins1545, bronzePick, pohTab,
 		flour3, redberries3, onions6, woad2, pieDish, bucket,
@@ -82,10 +88,16 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 		step22 = new com.questhelper.playerquests.bruhsailer.sections.Step22Section(this);
 		step23 = new com.questhelper.playerquests.bruhsailer.sections.Step23Section(this);
 		step24 = new com.questhelper.playerquests.bruhsailer.sections.Step24Section(this);
+		step32 = new Step32Section(this);
+		step35 = new Step35Section(this);
+		step36 = new Step36Section(this);
 		step21.wire(flow, state);
 		step22.wire(flow, state);
 		step23.wire(flow, state);
 		step24.wire(flow, state);
+		step32.wire(flow, state);
+		step35.wire(flow, state);
+		step36.wire(flow, state);
 		return flow;
 	}
 
@@ -355,6 +367,9 @@ public class BruhsailerGuide extends PlayerMadeQuestHelper
 		p.add(step22.getPanel());
 		p.add(step23.getPanel());
 		p.add(step24.getPanel());
+		p.add(step32.getPanel());
+		p.add(step35.getPanel());
+		p.add(step36.getPanel());
 		return p;
 	}
 
