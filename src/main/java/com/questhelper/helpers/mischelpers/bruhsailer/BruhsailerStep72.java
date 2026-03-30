@@ -121,6 +121,17 @@ public class BruhsailerStep72
 		arriveKourend = new DetailedQuestStep(guide, new WorldPoint(1515, 3405, 0),
 			"Arrive at Kourend. Once in Port Piscarilius, make your way to Land's End " +
 			"if needed, or proceed directly to your next destination in Kourend.");
+
+		bankAndGrab.withId(7201);
+		useChronicle.withId(7202);
+		plantBarley.withId(7203);
+		travelToGrandTree.withId(7204);
+		continueGrandTree.withId(7205);
+		enterShipyard.withId(7206);
+		buyFromGnomeWaiter.withId(7207);
+		charterToPortSarim.withId(7208);
+		talkToVeos.withId(7209);
+		arriveKourend.withId(7210);
 	}
 
 	public QuestStep getFirstStep()
@@ -133,12 +144,17 @@ public class BruhsailerStep72
 		return Arrays.asList(coins, chronicle, barleySeeds, seedDibber, rake, compost, food);
 	}
 
+	public List<QuestStep> getSteps()
+	{
+		return Arrays.asList(bankAndGrab, useChronicle, plantBarley, travelToGrandTree,
+			continueGrandTree, enterShipyard, buyFromGnomeWaiter, charterToPortSarim,
+			talkToVeos, arriveKourend);
+	}
+
 	public PanelDetails getPanel()
 	{
 		return new PanelDetails("Step 72: Chronicle, Grand Tree & Kourend Travel",
-			Arrays.asList(bankAndGrab, useChronicle, plantBarley, travelToGrandTree,
-				continueGrandTree, enterShipyard, buyFromGnomeWaiter, charterToPortSarim,
-				talkToVeos, arriveKourend),
-			coins, chronicle, barleySeeds, seedDibber, rake, compost, food);
+			getSteps(),
+			coins, chronicle, barleySeeds, seedDibber, rake, compost, food).withPanelId(72);
 	}
 }

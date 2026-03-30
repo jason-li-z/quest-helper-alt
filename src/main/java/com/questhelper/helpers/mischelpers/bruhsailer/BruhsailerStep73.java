@@ -157,6 +157,22 @@ public class BruhsailerStep73
 			food);
 		completeFenkenstrain.conditionToFadeInSidebar(
 			new QuestRequirement(QuestHelperQuest.CREATURE_OF_FENKENSTRAIN, QuestState.FINISHED));
+
+		travelToShayzien.withId(7301);
+		completeTaleOfTheRighteous.withId(7302);
+		travelToLovakengj.withId(7303);
+		completeForsakenTower.withId(7304);
+		travelToArceuus.withId(7305);
+		completeAscentOfArceuus.withId(7306);
+		wintertodtLoop.withId(7307);
+		travelToPiscarilius.withId(7308);
+		completeQueenOfThieves.withId(7309);
+		completeDepthsOfDespair.withId(7310);
+		completeBearYourSoul.withId(7311);
+		completeGettingAhead.withId(7312);
+		optionalHunterBluegill.withId(7313);
+		completeGardenOfDeath.withId(7314);
+		completeFenkenstrain.withId(7315);
 	}
 
 	public QuestStep getFirstStep()
@@ -169,17 +185,22 @@ public class BruhsailerStep73
 		return Arrays.asList(coins, food, spade, tinderbox, axe);
 	}
 
+	public List<QuestStep> getSteps()
+	{
+		return Arrays.asList(travelToShayzien, completeTaleOfTheRighteous,
+			travelToLovakengj, completeForsakenTower,
+			travelToArceuus, completeAscentOfArceuus,
+			wintertodtLoop, travelToPiscarilius,
+			completeQueenOfThieves, completeDepthsOfDespair,
+			completeBearYourSoul, completeGettingAhead,
+			optionalHunterBluegill, completeGardenOfDeath,
+			completeFenkenstrain);
+	}
+
 	public PanelDetails getPanel()
 	{
 		return new PanelDetails("Step 73: Kourend Quests & Activities",
-			Arrays.asList(travelToShayzien, completeTaleOfTheRighteous,
-				travelToLovakengj, completeForsakenTower,
-				travelToArceuus, completeAscentOfArceuus,
-				wintertodtLoop, travelToPiscarilius,
-				completeQueenOfThieves, completeDepthsOfDespair,
-				completeBearYourSoul, completeGettingAhead,
-				optionalHunterBluegill, completeGardenOfDeath,
-				completeFenkenstrain),
-			coins, food, spade, tinderbox, axe);
+			getSteps(),
+			coins, food, spade, tinderbox, axe).withPanelId(73);
 	}
 }

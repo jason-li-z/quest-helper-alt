@@ -109,6 +109,15 @@ public class BruhsailerStep74
 			excalibur, holyTableNapkin, magicWhistle, food);
 		completeHolyGrail.conditionToFadeInSidebar(
 			new QuestRequirement(QuestHelperQuest.HOLY_GRAIL, QuestState.FINISHED));
+
+		bankForBlastFurnace.withId(7401);
+		teleportToBlastFurnace.withId(7402);
+		doBlastFurnace.withId(7403);
+		travelToKeldagrim.withId(7404);
+		harvestHops.withId(7405);
+		startFermentation.withId(7406);
+		teleportToCamelot.withId(7407);
+		completeHolyGrail.withId(7408);
 	}
 
 	public QuestStep getFirstStep()
@@ -122,13 +131,18 @@ public class BruhsailerStep74
 			magicWhistle, food);
 	}
 
+	public List<QuestStep> getSteps()
+	{
+		return Arrays.asList(bankForBlastFurnace, teleportToBlastFurnace, doBlastFurnace,
+			travelToKeldagrim, harvestHops, startFermentation,
+			teleportToCamelot, completeHolyGrail);
+	}
+
 	public PanelDetails getPanel()
 	{
 		return new PanelDetails("Step 74: Blast Furnace, Keldagrim & Holy Grail",
-			Arrays.asList(bankForBlastFurnace, teleportToBlastFurnace, doBlastFurnace,
-				travelToKeldagrim, harvestHops, startFermentation,
-				teleportToCamelot, completeHolyGrail),
+			getSteps(),
 			coins, ores, airRunes, lawRunes, excalibur, holyTableNapkin,
-			magicWhistle, food);
+			magicWhistle, food).withPanelId(74);
 	}
 }

@@ -96,6 +96,15 @@ public class BruhsailerStep75
 			"If you switched to the Arceuus spellbook earlier, return to the normal " +
 			"spellbook by praying at the altar in Lumbridge or any other standard altar. " +
 			"Make sure you are on the correct spellbook before continuing to the next step.");
+
+		bankForTeaks.withId(7501);
+		travelToSoulWars.withId(7502);
+		doTwoTickTeaks.withId(7503);
+		optionalForestryWorld.withId(7504);
+		optionalSulliuscep.withId(7505);
+		optionalLogBasket.withId(7506);
+		optionalPushTo75.withId(7507);
+		returnToNormalSpellbook.withId(7508);
 	}
 
 	public QuestStep getFirstStep()
@@ -108,12 +117,17 @@ public class BruhsailerStep75
 		return Arrays.asList(axe, knife, coins);
 	}
 
+	public List<QuestStep> getSteps()
+	{
+		return Arrays.asList(bankForTeaks, travelToSoulWars, doTwoTickTeaks,
+			optionalForestryWorld, optionalSulliuscep, optionalLogBasket,
+			optionalPushTo75, returnToNormalSpellbook);
+	}
+
 	public PanelDetails getPanel()
 	{
 		return new PanelDetails("Step 75: Teaks & Woodcutting",
-			Arrays.asList(bankForTeaks, travelToSoulWars, doTwoTickTeaks,
-				optionalForestryWorld, optionalSulliuscep, optionalLogBasket,
-				optionalPushTo75, returnToNormalSpellbook),
-			axe, knife, coins);
+			getSteps(),
+			axe, knife, coins).withPanelId(75);
 	}
 }
