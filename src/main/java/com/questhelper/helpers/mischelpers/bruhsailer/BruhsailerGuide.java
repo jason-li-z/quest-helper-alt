@@ -15,6 +15,10 @@ public class BruhsailerGuide extends BasicQuestHelper
 	private BruhsailerStep65 step65;
 	private BruhsailerStep66 step66;
 	private BruhsailerStep67 step67;
+	private BruhsailerStep72 step72;
+	private BruhsailerStep73 step73;
+	private BruhsailerStep74 step74;
+	private BruhsailerStep75 step75;
 
 	@Override
 	protected void setupZones()
@@ -36,6 +40,18 @@ public class BruhsailerGuide extends BasicQuestHelper
 
 		step67 = new BruhsailerStep67(this);
 		step67.setup();
+
+		step72 = new BruhsailerStep72(this);
+		step72.setup();
+
+		step73 = new BruhsailerStep73(this);
+		step73.setup();
+
+		step74 = new BruhsailerStep74(this);
+		step74.setup();
+
+		step75 = new BruhsailerStep75(this);
+		step75.setup();
 	}
 
 	@Override
@@ -68,6 +84,22 @@ public class BruhsailerGuide extends BasicQuestHelper
 		{
 			reqs.addAll(step67.getItemRequirements());
 		}
+		if (step72 != null)
+		{
+			reqs.addAll(step72.getItemRequirements());
+		}
+		if (step73 != null)
+		{
+			reqs.addAll(step73.getItemRequirements());
+		}
+		if (step74 != null)
+		{
+			reqs.addAll(step74.getItemRequirements());
+		}
+		if (step75 != null)
+		{
+			reqs.addAll(step75.getItemRequirements());
+		}
 		return reqs;
 	}
 
@@ -87,6 +119,22 @@ public class BruhsailerGuide extends BasicQuestHelper
 		if (step67 != null)
 		{
 			panels.add(step67.getPanel());
+		}
+		if (step72 != null)
+		{
+			panels.add(step72.getPanel());
+		}
+		if (step73 != null)
+		{
+			panels.add(step73.getPanel());
+		}
+		if (step74 != null)
+		{
+			panels.add(step74.getPanel());
+		}
+		if (step75 != null)
+		{
+			panels.add(step75.getPanel());
 		}
 
 		return panels;
