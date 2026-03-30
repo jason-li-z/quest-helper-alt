@@ -29,6 +29,7 @@ import com.questhelper.managers.QuestManager;
 import com.questhelper.panel.JGenerator;
 import com.questhelper.panel.PanelDetails;
 import com.questhelper.panel.QuestRequirementsPanel;
+import com.questhelper.questhelpers.BasicQuestHelper;
 import com.questhelper.questhelpers.QuestHelper;
 import com.questhelper.questhelpers.QuestHelper;
 import com.questhelper.steps.BoardShipStep;
@@ -186,7 +187,38 @@ public class QuestStepPanel extends AbstractQuestSection implements MouseListene
 		questStepLabel.setText(generateText(step));
 		questStepLabel.setOpaque(true);
 		questStepLabel.setVisible(step.isShowInSidebar());
+		if (isSelectableManualStep(step))
+		{
+			questStepLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			questStepLabel.setToolTipText("Click to switch the helper to this substep.");
+			questStepLabel.addMouseListener(new java.awt.event.MouseAdapter()
+			{
+				@Override
+				public void mouseClicked(MouseEvent e)
+				{
+					if (e.getButton() == MouseEvent.BUTTON1)
+					{
+						selectManualStep(step);
+					}
+				}
+			});
+		}
 		return questStepLabel;
+	}
+
+	private boolean isSelectableManualStep(QuestStep step)
+	{
+		return questHelper instanceof BasicQuestHelper && step.getId() != null;
+	}
+
+	private void selectManualStep(QuestStep step)
+	{
+		if (!(questHelper instanceof BasicQuestHelper) || step.getId() == null)
+		{
+			return;
+		}
+
+		((BasicQuestHelper) questHelper).setSelectedStateOverride(step.getId());
 	}
 
 	public void updateAllText()

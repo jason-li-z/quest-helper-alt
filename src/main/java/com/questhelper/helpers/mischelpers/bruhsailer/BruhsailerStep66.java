@@ -105,6 +105,16 @@ public class BruhsailerStep66
 			"Bring your magic gold feather for The Lost Tribe.");
 		goToGoblinVillage.addRequirement(magicWhistles);
 		goToGoblinVillage.addRequirement(magicGoldFeather);
+
+		teleportToFalador.withId(6601);
+		smeltConductorRod.withId(6602);
+		smeltDemonicSigil.withId(6603);
+		makeHolySymbol.withId(6604);
+		makeHerblore.withId(6605);
+		grabBotanicalPie.withId(6606);
+		speakWithAlain.withId(6607);
+		speakWithSanfew.withId(6608);
+		goToGoblinVillage.withId(6609);
 	}
 
 	public QuestStep getFirstStep()
@@ -118,13 +128,16 @@ public class BruhsailerStep66
 			magicWhistles, magicGoldFeather, silverBar, ironBar);
 	}
 
+	public List<QuestStep> getSteps()
+	{
+		return Arrays.asList(teleportToFalador, smeltConductorRod, smeltDemonicSigil, makeHolySymbol, makeHerblore,
+			grabBotanicalPie, speakWithAlain, speakWithSanfew, goToGoblinVillage);
+	}
+
 	public PanelDetails getPanel()
 	{
 		return new PanelDetails("Step 66: Falador Crafting & Quest Progress",
-			Arrays.asList(teleportToFalador, smeltConductorRod, smeltDemonicSigil,
-				makeHolySymbol, makeHerblore, grabBotanicalPie, speakWithAlain,
-				speakWithSanfew, goToGoblinVillage),
-			waterRunes, airStaff, lawRunes, chaosRunes, magicWhistles,
-			magicGoldFeather, silverBar, ironBar);
+			getSteps(), waterRunes, airStaff, lawRunes, chaosRunes, magicWhistles,
+			magicGoldFeather, silverBar, ironBar).withPanelId(66);
 	}
 }

@@ -84,6 +84,12 @@ public class BruhsailerStep65
 
 		keepTrollBone = new DetailedQuestStep(guide,
 			"Keep the troll bone if you obtained one during the troll quests. It is needed for Rag and Bone Man II.");
+
+		bankAtFerox.withId(6501);
+		completeDeathPlateau.withId(6502);
+		completeTrollStronghold.withId(6503);
+		buyClimbingBoots.withId(6504);
+		keepTrollBone.withId(6505);
 	}
 
 	public QuestStep getFirstStep()
@@ -96,11 +102,14 @@ public class BruhsailerStep65
 		return Arrays.asList(coins, bread, trout, ironBar, asgarnianAle, premadeBlurbSpecial);
 	}
 
+	public List<QuestStep> getSteps()
+	{
+		return Arrays.asList(bankAtFerox, completeDeathPlateau, completeTrollStronghold, buyClimbingBoots, keepTrollBone);
+	}
+
 	public PanelDetails getPanel()
 	{
 		return new PanelDetails("Step 65: Death Plateau & Troll Stronghold",
-			Arrays.asList(bankAtFerox, completeDeathPlateau, completeTrollStronghold,
-				buyClimbingBoots, keepTrollBone),
-			coins, bread, trout, ironBar, asgarnianAle, premadeBlurbSpecial);
+			getSteps(), coins, bread, trout, ironBar, asgarnianAle, premadeBlurbSpecial).withPanelId(65);
 	}
 }

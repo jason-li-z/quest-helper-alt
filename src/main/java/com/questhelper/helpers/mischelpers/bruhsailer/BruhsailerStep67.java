@@ -99,6 +99,16 @@ public class BruhsailerStep67
 		startDeathToTheDorgeshuun = new NpcStep(guide, NpcID.LOST_TRIBE_MISTAG_2OPS,
 			new WorldPoint(3319, 9615, 0),
 			"Start Death to the Dorgeshuun by speaking to Mistag. Only do the very first step.");
+
+		grabScryingOrbAndPickaxe.withId(6701);
+		teleportToWizardsTower.withId(6702);
+		chargeScryingOrb.withId(6703);
+		runToDraynor.withId(6704);
+		continueFairytaleI.withId(6705);
+		teleportToLumbridge.withId(6706);
+		finishLostTribe.withId(6707);
+		giveMistagBrooch.withId(6708);
+		startDeathToTheDorgeshuun.withId(6709);
 	}
 
 	public QuestStep getFirstStep()
@@ -112,14 +122,16 @@ public class BruhsailerStep67
 			scryingOrb, pickaxe);
 	}
 
+	public List<QuestStep> getSteps()
+	{
+		return Arrays.asList(grabScryingOrbAndPickaxe, teleportToWizardsTower, chargeScryingOrb, runToDraynor,
+			continueFairytaleI, teleportToLumbridge, finishLostTribe, giveMistagBrooch, startDeathToTheDorgeshuun);
+	}
+
 	public PanelDetails getPanel()
 	{
 		return new PanelDetails("Step 67: Scrying Orb, Fairytale I & The Lost Tribe",
-			Arrays.asList(grabScryingOrbAndPickaxe, teleportToWizardsTower,
-				chargeScryingOrb, runToDraynor, continueFairytaleI,
-				teleportToLumbridge, finishLostTribe, giveMistagBrooch,
-				startDeathToTheDorgeshuun),
-			necklaceOfPassage, dramenStaff, airRunes, earthStaff, lawRunes, brooch,
-			scryingOrb, pickaxe);
+			getSteps(), necklaceOfPassage, dramenStaff, airRunes, earthStaff, lawRunes, brooch,
+			scryingOrb, pickaxe).withPanelId(67);
 	}
 }
